@@ -135,7 +135,7 @@ class TodoList extends StatelessWidget {
                     controller: _controller,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Task todo',
+                      labelText: 'Todo task',
                       prefixIcon: Icon(Icons.text_fields),
                     ),
                     onFieldSubmitted: (String value) {
