@@ -27,26 +27,12 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
-  var todoList = [];
+  List<String> todoList = [];
 
-  void addToList(task) {
+  void addToList(String task) {
+    print('added $task');
     todoList.add(task);
-  }
-
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  var favorites = <WordPair>[];
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
+    notifyListeners(); // Notify listeners when the data changes
   }
 }
 
@@ -96,23 +82,27 @@ class TodoList extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.8, // 80% ekranu
+          Expanded(
             child: ListView.builder(
               itemCount: appState.todoList.length,
-              itemBuilder: (BuildContext context, int index){
-                return Container (
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
                   height: 50,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   color: Colors.blueAccent,
-                  margin: EdgeInsets.all(8.0),
-                )
+                  margin: const EdgeInsets.all(8.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    appState.todoList[index],
+                    style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                  ),
+                );
               },
-            )
+            ),
           ),
           Form(
             key: _formKey,
             child: Row(
-              // Use Row for form field and button in the same row
               children: [
                 Expanded(
                   child: TextFormField(
@@ -141,84 +131,11 @@ class TodoList extends StatelessWidget {
                               MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       )))),
-                )
+                ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
-  });
-
-  final WordPair pair;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first} ${pair.second}",
-        ),
       ),
     );
   }
