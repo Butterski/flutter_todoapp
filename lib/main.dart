@@ -30,9 +30,17 @@ class MyAppState extends ChangeNotifier {
   List<String> todoList = [];
 
   void addToList(String task) {
-    print('added $task');
+    print('Added $task');
     todoList.add(task);
     notifyListeners(); // Notify listeners when the data changes
+  }
+
+  void removeFromList(int index) {
+    if (index >= 0 && index < todoList.length) {
+      print('Removed ${todoList[index]}');
+      todoList.removeAt(index);
+      notifyListeners();
+    }
   }
 }
 
@@ -78,6 +86,10 @@ class TodoList extends StatelessWidget {
       }
     }
 
+    void _removeTask(int index) {
+      appState.removeFromList(index);
+    }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,14 +99,28 @@ class TodoList extends StatelessWidget {
               itemCount: appState.todoList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  height: 50,
+                  // height: 50,
                   width: MediaQuery.of(context).size.width * 0.9,
-                  color: Colors.blueAccent,
                   margin: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.blueAccent,
+                  ),
                   alignment: Alignment.center,
-                  child: Text(
-                    appState.todoList[index],
-                    style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                  child: Row(
+                    children: [
+                      Expanded(child:
+                      Text(
+                        '${index+1} - ${appState.todoList[index]}',
+                        style: const TextStyle(fontSize: 18.0, color: Colors.white),
+                      ),),
+
+                      ElevatedButton(
+                        onPressed: () => _removeTask(index), // Use a lambda function here
+                        child: const Icon(Icons.delete, color: Colors.red,),
+                      ),
+                    ],
                   ),
                 );
               },
