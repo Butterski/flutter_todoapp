@@ -25,21 +25,20 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  List<String> todoList = [];
-  var todoList2 = {'admin': ['Zrobić zakupy', 'Wyjść na dwór', 'Podotykać trawe']};
+  var todoList = {'admin': ['Zrobić zakupy', 'Wyjść na dwór', 'Podotykać trawe']};
   var userName = '';
   var logged = false;
 
   void addToList(String task) {
     print('Added $task');
-    todoList2[userName]?.add(task);
+    todoList[userName]?.add(task);
     notifyListeners(); // Notify listeners when the data changes
   }
 
   void removeFromList(int index) {
     if (index >= 0 && index < todoList.length) {
       print('Removed ${todoList[index]}');
-      todoList2[userName]?.removeAt(index);
+      todoList[userName]?.removeAt(index);
       notifyListeners();
     }
   }
@@ -49,8 +48,8 @@ class MyAppState extends ChangeNotifier {
       print('Logged as $login');
       logged = true;
       userName = login;
-      if (todoList2[userName] == null) {
-        todoList2[userName] = [];
+      if (todoList[userName] == null) {
+        todoList[userName] = [];
       }
       notifyListeners();
     }
@@ -189,7 +188,7 @@ class TodoList extends StatelessWidget {
               const SizedBox(height: 26.0),
               Expanded(
                 child: ListView.builder(
-                  itemCount: appState.todoList2[appState.userName]?.length,
+                  itemCount: appState.todoList[appState.userName]?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       width: MediaQuery.of(context).size.width * 0.9,
@@ -204,7 +203,7 @@ class TodoList extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              '${index + 1} - ${appState.todoList2[appState.userName]?[index]}',
+                              '${index + 1} - ${appState.todoList[appState.userName]?[index]}',
                               style: const TextStyle(
                                   fontSize: 18.0, color: Colors.white),
                             ),
