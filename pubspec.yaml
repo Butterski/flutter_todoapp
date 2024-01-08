@@ -11,9 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  sqflite: ^2.0.0+4
   english_words: ^4.0.0
+  sqflite_common_ffi: ^2.0.0+4
   provider: ^6.0.0
+  path_provider: ^2.0.2
 
 dev_dependencies:
   flutter_test:
